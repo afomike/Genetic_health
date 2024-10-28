@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Generic And Analysis Health Website</title>
+  </head>
+  <body>
+    <header id="header">
+      <i class="fas fa-bars" id="nav-toggler"></i>
+      <div>
+        <i class="fas fa-user-alt"></i>
+        <span>{{ full_name }}</span>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <div>
+        <div class="logo">
+          <i class="fab fa-gg-circle"></i>
+          <span>GAA Health Site</span>
+        </div>
+        <ul class="nav">
+          <li class="nav__item">
+            <a href="#" class="nav__item-link">
+              <i class="fas fa-home"></i>
+              <span>Dashboard <i class="fas fa-angle-down"></i></span>
+            </a>
+            <ul class="d-none">
+              <li>
+                
+                <a href="{{ url_for('view_data') }}" class="sub_link" id="View-Record">
+                  <i class="fas fa-database database-icon"></i>
+                  <i class="fas fa-eye eye-icon"></i> View Record</a>
+              </li>
+              <li>
+                <a href="{{ url_for('analytics') }}" class="sub_link" id="View-Analysis">
+                  <i class="fas fa-chart-bar chart-icon"></i>
+                  <i class="fas fa-eye eye-icon"></i> View Analysis</a>
+              </li>
+              <!-- <li>
+                <a href="#" class="sub_link">Link 3</a>
+              </li> -->
+            </ul>
+          </li>
+          <li class="nav__item" id="Add-Record">
+            <a href="{{ url_for('dashboard') }}" class="nav__item-link active">
+              <!-- <i class="fas fa-database"></i> -->
+              <i class="fas fa-database database-icon"></i>
+              <i class="fas fa-plus plus-icon"></i> 
+              <span>Add Record</span>
+            </a>
+          </li>
+          <!-- <li class="nav__item" id="Prediction">
+            <a href="#" class="nav__item-link">
+              <i class="fas fa-chart-line chart-icon"></i>
+              <i class="fas fa-lightbulb lightbulb-icon"></i>
+              <span>Prediction</span>
+            </a>
+          </li> -->
+          <!-- <li class="nav__item">
+            <a href="#" class="nav__item-link">
+              <i class="fas fa-cogs"></i>
+              <span>Settings</span>
+            </a>
+          </li>  -->
+        </ul>
+      </div>
+
+      <a href="{{ url_for('logout') }}" class="sign-out">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Sign Out</span>
+      </a>
+    </nav>
+  <!-- Flash messages -->
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<!-- Page Content -->
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+<div class="form-container" id="form-container">
+  <!-- Progress bar -->
+  <div class="progressbar">
+    <div class="progress" id="progress"></div>
+    <div class="progress-step progress-step-active"></div>
+    <div class="progress-step"></div>
+    <div class="progress-step"></div>
+    <div class="progress-step"></div>
+  </div>
+
+
+  <!-- Multi-step form -->
+  <form id="diagnosisForm" method="POST" action="/submit_diagnosis">
+    <!-- Step 1 -->
+    <div class="form-step form-step-active">
+      <h2>Patient Info</h2>
+      <label>Patient Name:</label>
+      <input type="text" name="patient_name" required>
+
+      <label>Age:</label>
+      <input type="number" name="age" required>
+
+      <label>Gender:</label>
+      <select name="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+      </select>
+      <label>Phone Number:</label>
+      <input type="tel" name="num" required>
+
+      <label>State:</label>
+      <input type="text" name="state" required>
+
+      <label>LGA:</label>
+      <input type="text" name="LGA" required>
+
+      <label>Address:</label>
+      <input type="text" name="address" required>
+      
+      <div class="btn-container">
+        <button type="button" class="btn-next">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="form-step">
+      <h2>Symptoms and Diagnosis</h2>
+      <label>Disease:</label>
+      <input type="text" name="disease" required>
+
+      <label>Diagnosis:</label>
+      <textarea name="diagnosis" required></textarea>
+
+      <label>Symptom 1:</label>
+      <input type="text" name="symptom_1">
+
+      <label>Symptom 2:</label>
+      <input type="text" name="symptom_2">
+
+      <label>Symptom 3:</label>
+      <input type="text" name="symptom_3">
+
+      <label>Symptom 4:</label>
+      <input type="text" name="symptom_4">
+
+      <div class="btn-container">
+        <button type="button" class="btn-prev">Previous</button>
+        <button type="button" class="btn-next">Next</button>
+      </div>
+    </div>
+   <!-- Step 3-->
+    <div class="form-step">
+        <h2>Other Symptoms</h2>
+        <label>Symptom 5:</label>
+        <input type="text" name="symptom_5" >
+  
+        <label>Symptom 6:</label>
+        <input type="text" name="symptom_6" >
+    
+        <label>Symptom 7:</label>
+        <input type="text" name="symptom_7">
+  
+        <label>Symptom 8:</label>
+        <input type="text" name="symptom_8">
+  
+        <label>Symptom 9:</label>
+        <input type="text" name="symptom_9">
+  
+        <label>Symptom 10:</label>
+        <input type="text" name="symptom_10">
+  
+        <div class="btn-container">
+          <button type="button" class="btn-prev">Previous</button>
+          <button type="button" class="btn-next">Next</button>
+        </div>
+      </div>
+    <!-- Step 4 -->
+    <div class="form-step">
+      <h2>Test Results and Medications</h2>
+      <label>Test Results:</label>
+      <textarea name="test_results"></textarea>
+
+      <label>Medications:</label>
+      <textarea name="medications"></textarea>
+
+      <label>Additional Comments:</label>
+      <textarea name="additional_comments"></textarea>
+
+      <div class="btn-container">
+        <button type="button" class="btn-prev">Previous</button>
+        <input type="submit" value="Submit Diagnosis">
+      </div>
+    </div>
+  </form>
+</div>
+   <!-- Link to main.js -->
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+  </body>
+</html>

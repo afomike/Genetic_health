@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Generic And Analysis Health Website</title>
+  </head>
+  <body>
+    <header id="header">
+      <i class="fas fa-bars" id="nav-toggler"></i>
+      <div>
+        <i class="fas fa-user-alt"></i>
+        <span>{{ full_name }}</span>
+      </div>
+    </header>
+
+    <nav id="nav">
+      <div>
+        <div class="logo">
+          <i class="fab fa-gg-circle"></i>
+          <span>GAA Health Site</span>
+        </div>
+        <ul class="nav">
+          <li class="nav__item">
+            <a href="#" class="nav__item-link">
+              <i class="fas fa-home"></i>
+              <span>Dashboard <i class="fas fa-angle-down"></i></span>
+            </a>
+            <ul class="d-none">
+              <li>
+                
+                <a href="{{ url_for('view_data') }}" class="sub_link" id="View-Record">
+                  <i class="fas fa-database database-icon"></i>
+                  <i class="fas fa-eye eye-icon"></i> View Record</a>
+              </li>
+              <li>
+                <a href="{{ url_for('analytics') }}" class="sub_link" id="View-Analysis">
+                  <i class="fas fa-chart-bar chart-icon"></i>
+                  <i class="fas fa-eye eye-icon"></i> View Analysis</a>
+              </li>
+              <!-- <li>
+                <a href="#" class="sub_link">Link 3</a>
+              </li> -->
+            </ul>
+          </li>
+          <li class="nav__item" id="Add-Record">
+            <a href="{{ url_for('dashboard') }}" class="nav__item-link active">
+              <!-- <i class="fas fa-database"></i> -->
+              <i class="fas fa-database database-icon"></i>
+              <i class="fas fa-plus plus-icon"></i> 
+              <span>Add Record</span>
+            </a>
+          </li>
+          <!-- <li class="nav__item" id="Prediction">
+            <a href="#" class="nav__item-link">
+              <i class="fas fa-chart-line chart-icon"></i>
+              <i class="fas fa-lightbulb lightbulb-icon"></i>
+              <span>Prediction</span>
+            </a>
+          </li> -->
+          <!-- <li class="nav__item">
+            <a href="#" class="nav__item-link">
+              <i class="fas fa-cogs"></i>
+              <span>Settings</span>
+            </a>
+          </li>  -->
+        </ul>
+      </div>
+
+      <a href="{{ url_for('logout') }}" class="sign-out">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Sign Out</span>
+      </a>
+    </nav>
+  <!-- Flash messages -->
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<!-- Page Content -->
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<div id="container_table">
+  <div class="table-container" >
+    <h1>Patient Data</h1>
+  </div>
+  <div class="table-container">
+    <table>
+        <tr>
+            <th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>State</th><th>LGA</th><th>Address</th><th>Actions</th>
+        </tr>
+        {% for patient in patients %}
+        <tr>
+            <td>{{ patient.patient_id }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.gender }}</td>
+            <td>{{ patient.state }}</td>
+            <td>{{ patient.LGA }}</td>
+            <td>{{ patient.address }}</td>
+            <td>
+                <a href="{{ url_for('edit_entry', table='patients', id=patient.patient_id) }}">Edit</a> |
+                <a href="{{ url_for('delete_entry', table='patients', id=patient.patient_id) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+  </div>
+
+  <div class="table-container">
+    <h1>Disease Data</h1>
+  </div>
+  <div class="table-container">
+    <table>
+        <tr>
+            <th>Disease ID</th><th>Disease Name</th><th>Actions</th>
+        </tr>
+        {% for disease in diseases %}
+        <tr>
+            <td>{{ disease.disease_id }}</td>
+            <td>{{ disease.disease_name }}</td>
+            <td>
+                <a href="{{ url_for('edit_entry', table='diseases', id=disease.disease_id) }}">Edit</a> |
+                <a href="{{ url_for('delete_entry', table='diseases', id=disease.disease_id) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+  </div>
+
+  <div class="table-container">
+    <h1>Diagnosis Data</h1>
+  </div>
+  <div class="table-container">
+    <table>
+        <tr>
+            <th>Diagnosis ID</th><th>Patient ID</th><th>Disease ID</th><th>Diagnosis</th><th>Actions</th>
+        </tr>
+        {% for diagnosis in diagnoses %}
+        <tr>
+            <td>{{ diagnosis.diagnosis_id }}</td>
+            <td>{{ diagnosis.patient_id }}</td>
+            <td>{{ diagnosis.disease_id }}</td>
+            <td>{{ diagnosis.diagnosis }}</td>
+            <td>
+                <a href="{{ url_for('edit_entry', table='diagnoses', id=diagnosis.diagnosis_id) }}">Edit</a> |
+                <a href="{{ url_for('delete_entry', table='diagnoses', id=diagnosis.diagnosis_id) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+  </div>
+</div>
+
+   
+    <!-- Link to main.js -->
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+  </body>
+</html>
