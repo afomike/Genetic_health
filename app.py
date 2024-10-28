@@ -78,14 +78,16 @@ def register_doctor():
             
             mycursor.execute(sql, val)
             mydb.commit()
-
-            return jsonify({"message": "Doctor registration successful!"}), 201
-
+            
+            flash('Doctor registration successful!.', 'success')
+            return render_template('index.html', place_wrn=f'Doctor registration successful!.')
+            
         except mysql.connector.Error as err:
             # Rollback in case of error and report it
             mydb.rollback()
-            return jsonify({"error": str(err)}), 500
-
+            flash(f'"error": {str(err)}', 'danger')
+            return render_template('index.html', place_wrn=f'"error": {str(err)}')
+            
         finally:
             # Ensure the database connection is closed
             mycursor.close()
@@ -210,16 +212,16 @@ def submit_diagnosis():
 
         # Commit the transaction
         mydb.commit()
-        flash(f"Diagnosis for {patient_name} has been recorded successfully!")
+        flash(f"Diagnosis for {patient_name} has been recorded successfully!", "success")
         # return f"Diagnosis for {patient_name} has been recorded successfully!"
-        return render_template('dashboard.html', patients=f"Diagnosis for {patient_name} has been recorded successfully!")
+        return render_template('dashboard.html', place_wrn=f"Diagnosis for {patient_name} has been recorded successfully!")
 
     
     except Exception as e:
         # Rollback any changes if an error occurs
         mydb.rollback()
-        flash(f"An error occurred: {str(e)}")
-        return f"An error occurred: {str(e)}"
+        flash(f"An error occurred: {str(e)}", "danger")
+        return render_template('dashboard.html', place_wrn=f"An error occurred: {str(e)}")
     
     finally:
         # Close cursor and database connection
@@ -254,8 +256,9 @@ def view_data():
         return render_template('view.html', full_name=session['full_name'],  patients=patients, diseases=diseases, diagnoses=diagnoses)
 
     except Exception as e:
-        flash(f"An error occurred: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        flash(f"An error occurred: {str(e)}","success")
+        return render_template('view.html',  view_r=f"An error occurred: {str(e)}")
+
 
     finally:
         mycursor.close()
