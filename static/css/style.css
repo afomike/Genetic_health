@@ -294,8 +294,9 @@ th {
 
 /* Overall layout for the analytics content */
 .container_analytics {
-  max-width: 1200px;
-  margin: auto;
+  max-width: 80%;
+  margin: auto 25% ;
+  
   padding: 20px;
   font-family: Arial, sans-serif;
 }
