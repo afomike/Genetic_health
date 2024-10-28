@@ -6,4 +6,5 @@ numpy==1.26.4
 Werkzeug==2.2.3
 plotly==5.9.0
 secrets
+pyOpenSSL
 gunicorn
