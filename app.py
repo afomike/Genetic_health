@@ -3,7 +3,6 @@ import mysql.connector
 import os 
 import pandas as pd
 import MySQLdb as mysqlclient
-import secrets
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import shutil
