@@ -123,9 +123,16 @@
                     <li>{{ blood_type }}: {{ count }}</li>
                 {% endfor %}
             </ul>
+
+            <h3>Top 5 Most Common Medical Conditions:</h3>
+            <ul>
+                {% for condition, count in stats['top_conditions'].items() %}
+                    <li>{{ condition }}: {{ count }} cases</li>
+                {% endfor %}
+            </ul>
         </div>
 
-        <h2>Visualizations</h2>
+       <h2>Visualizations</h2>
         <div class="plot">
             <h3>Age Distribution</h3>
             {{ plots['fig_age'] | safe }}

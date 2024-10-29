@@ -351,13 +351,45 @@ def preprocess_data():
     gender_counts = data['Gender'].value_counts().to_dict()
     blood_type_counts = data['Blood Type'].value_counts().to_dict()
 
+    # Get the five most common medical conditions
+    top_conditions = data['Medical Condition'].value_counts().nlargest(5).to_dict()
+
     return {
         'avg_age': avg_age,
         'avg_billing': avg_billing,
         'avg_stay': avg_stay,
         'gender_counts': gender_counts,
-        'blood_type_counts': blood_type_counts
+        'blood_type_counts': blood_type_counts,
+        'top_conditions': top_conditions
     }
+
+# Data Preprocessing and Analysis
+# def preprocess_data():
+#     # Convert date columns to datetime
+#     data['Date of Admission'] = pd.to_datetime(data['Date of Admission'], errors='coerce')
+#     data['Discharge Date'] = pd.to_datetime(data['Discharge Date'], errors='coerce')
+    
+#     # Calculate length of stay
+#     data['Length of Stay'] = (data['Discharge Date'] - data['Date of Admission']).dt.days
+
+#     # Summary statistics
+#     avg_age = data['Age'].mean()
+#     avg_billing = data['Billing Amount'].mean()
+#     avg_stay = data['Length of Stay'].mean()
+#     gender_counts = data['Gender'].value_counts().to_dict()
+#     blood_type_counts = data['Blood Type'].value_counts().to_dict()
+#     # Find the most common medical condition
+#     most_common_condition = data['Medical Condition'].value_counts().idxmax()
+#     most_common_condition_count = data['Medical Condition'].value_counts().max()
+#     return {
+#         'avg_age': avg_age,
+#         'avg_billing': avg_billing,
+#         'avg_stay': avg_stay,
+#         'gender_counts': gender_counts,
+#         'blood_type_counts': blood_type_counts,
+#         'most_common_condition': most_common_condition,
+#         'most_common_condition_count': most_common_condition_count
+#     }
 
 # Visualization Functions
 def generate_plots():
