@@ -25,6 +25,11 @@ app.secret_key = os.urandom(24).hex()
 # Database password: ee3HbyjLLH
 # Port number: 3306
 
+# Host: sql12.freesqldatabase.com
+# Database name: sql12742317
+# Database user: sql12742317
+# Database password: eAr1vKdSCg
+# Port number: 3306
 # Database connection setup
 # def get_db_connection():
 #     return mysql.connector.connect(
@@ -37,10 +42,19 @@ app.secret_key = os.urandom(24).hex()
 def get_db_connection():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST", "sql12.freesqldatabase.com"),
-        user=os.getenv("DB_USER", "sql12740499"),
-        password=os.getenv("DB_PASSWORD", "ee3HbyjLLH"),
-        database=os.getenv("DB_NAME", "sql12740499")
+        user=os.getenv("DB_USER", "sql12742317"),
+        password=os.getenv("DB_PASSWORD", "eAr1vKdSCg"),
+        database=os.getenv("DB_NAME", "sql12742317")
     )
+
+# def get_db_connection():
+#     return mysql.connector.connect(
+#         host=os.getenv("DB_HOST", "sql313.infinityfree.com"),
+#         user=os.getenv("DB_USER", "if0_37639921"),
+#         password=os.getenv("DB_PASSWORD", "852pVCbEAX64pNT"),
+#         database=os.getenv("DB_NAME", "if0_37639921_if0_37639921_")
+#     )
+
 
 @app.route('/register_doctor', methods=['GET', 'POST'])
 def register_doctor():

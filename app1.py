@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS patients (
     contact_info VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
     LGA VARCHAR(255) NOT NULL,
-    address VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL
     );
 # name, age, gender, contact_info, state, LGA, address
 Create a table for diseases
