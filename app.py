@@ -1,4 +1,6 @@
 from flask import Flask, request, render_template, jsonify, session, redirect, url_for, request, flash
+import joblib
+import pandas as pd
 import mysql.connector
 import os 
 import pandas as pd
@@ -55,6 +57,9 @@ def get_db_connection():
 #         database=os.getenv("DB_NAME", "if0_37639921_if0_37639921_")
 #     )
 
+# Load the trained model and preprocessing objects
+model = joblib.load("models/medical_condition_model.pkl")
+label_encoders = joblib.load("models/label_encoders.pkl")
 
 @app.route('/register_doctor', methods=['GET', 'POST'])
 def register_doctor():
@@ -241,9 +246,6 @@ def submit_diagnosis():
         # Close cursor and database connection
         mycursor.close()
         mydb.close()
-
-# Route to display tables in HTML format
-from flask import request, jsonify, flash, render_template
 
 @app.route('/view_data', methods=['GET', 'POST'])
 def view_data():
@@ -437,6 +439,42 @@ def analytics():
     stats = preprocess_data()
     plots = generate_plots()
     return render_template('analytics.html', full_name=session['full_name'], stats=stats, plots=plots)
+
+categorical_columns = list(label_encoders.keys())
+
+@app.route('/predict', methods=['POST', 'GET'])
+def predict():
+    if request.method == "POST":
+        try:
+            # Convert JSON data to DataFrame
+            data = request.get_json()
+            data_df = pd.DataFrame([data])
+
+            # Convert numeric columns as needed
+            numeric_cols = ['age', 'bmi', 'blood_pressure', 'glucose_levels']
+            for col in numeric_cols:
+                data_df[col] = pd.to_numeric(data_df[col], errors='coerce')
+
+            # Apply LabelEncoder transformations for categorical columns
+            for col in label_encoders:
+                if col in data_df.columns:
+                    data_df[col] = label_encoders[col].transform(data_df[col])
+
+            # Make the prediction
+            prediction_encoded = model.predict(data_df)[0]
+
+            # Decode the prediction using the label encoder for the condition
+            prediction = label_encoders['condition'].inverse_transform([prediction_encoded])[0]
+
+            # Return the prediction as JSON
+            return jsonify({'condition': prediction})
+
+        except Exception as e:
+            # Handle any errors in prediction
+            return jsonify({'error': str(e)}), 500
+
+    # Render the prediction page for GET requests
+    return render_template('predict.html', full_name=session.get('full_name'))
 
 
 if __name__ == '__main__':
