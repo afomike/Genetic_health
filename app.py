@@ -48,12 +48,19 @@ app.secret_key = os.urandom(24).hex()
 # Database password: wCADgatu3Q
 # Port number: 3306
 # Database connection setup
+
+# Host: sql12.freesqldatabase.com
+# Database name: sql12745471
+# Database user: sql12745471
+# Database password: eLGqbBSyE5
+# Port number: 3306
+
 def get_db_connection():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST", "sql12.freesqldatabase.com"),
-        user=os.getenv("DB_USER", "sql12744054"),
-        password=os.getenv("DB_PASSWORD", "wCADgatu3Q"),
-        database=os.getenv("DB_NAME", "sql12744054")
+        user=os.getenv("DB_USER", "sql12745471"),
+        password=os.getenv("DB_PASSWORD", "eLGqbBSyE5"),
+        database=os.getenv("DB_NAME", "sql12745471")
     )
 
 # def get_db_connection():
